@@ -27,9 +27,8 @@ export default (ctx:IPluginContext, pluginOpts) => {
     ],
     async fn () {
       const { chalk }     = ctx.helper
-      let   { component } = ctx.runOpts
+      let   { component } = ctx.runOpts.options
       const { appPath }   = ctx.paths
-      console.log("------->",ctx.runOpts)
       if (typeof component !== 'string') {
         return console.log(chalk.red('请输入需要创建的页面名称'))
       }

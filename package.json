@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && npm run prod",
-    "publish": "npm run build &&npm version patch && npm publish",
+    "publish": "npm version patch && npm publish",
     "dev": "tsc -w",
     "prod": "tsc",
     "clean": "rimraf dist",
