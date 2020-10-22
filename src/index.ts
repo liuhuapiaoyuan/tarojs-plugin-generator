@@ -1,11 +1,9 @@
-
-import { IPluginContext } from '@tarojs/service'
 import path from 'path'
 import {porduct} from './generators/components'
 
 
 function firstUpperCase(str:string){
-  return str.replace(/\b(\w)(\w*)/g, function($0, $1, $2) {
+  return str.replace(/\b(\w)(\w*)/g, function(_$0, $1, $2) {
       return $1.toUpperCase() + $2.toLowerCase();
   });
 }
@@ -13,7 +11,8 @@ function firstUpperCase(str:string){
 
 // taro gen --component=Empty  组件名称要大写
 // taro gen --component=/pages/index/components/Empty
-export default (ctx:IPluginContext, pluginOpts) => {
+// export default (ctx, pluginOpts) => {
+export default (ctx) => {
   ctx.registerCommand({
     // 命令名
     name: 'gen', 
@@ -30,7 +29,7 @@ export default (ctx:IPluginContext, pluginOpts) => {
       let   { component } = ctx.runOpts.options
       const { appPath }   = ctx.paths
       if (typeof component !== 'string') {
-        return console.log(chalk.red('请输入需要创建的页面名称'))
+        return console.log(chalk.red('请输入需要创建的页面名称！！'))
       }
       component = firstUpperCase(component)
       //创建几个页面
