@@ -2,11 +2,11 @@
  * 组件生成器
  */
 import * as fs from 'fs'
-import { firstUpperCase } from 'src/utils';
-const path = require('path')
+import * as path from 'path'
+import { firstUpperCase } from '../utils';
 
 
-
+ 
 
 
 const tsx = name=>`import React from 'react'
@@ -14,17 +14,20 @@ import { View } from '@tarojs/components'
 import classnames from 'classnames'
 
 export interface ${name}Props  {
-    className?: string
-    children?:React.ReactNode
-    style?:string|React.CSSProperties|undefined
-  }
+  className?: string
+  children?:React.ReactNode
+  style?:string|React.CSSProperties|undefined
+}
 
 function ${name}(props:${name}Props){
-    return <View>
-    ${name}-content
-    </View>
+  const {
+
+  } = props
+  return <View>
+  ${name}-content
+  </View>
 }
-export {${name}}
+export { ${name} }
 `
 
 const style = name=>
@@ -43,14 +46,16 @@ function writeFileErrorHandler(err) {
  * @param componentName 组件名称
  * @param componentDir   组件文件夹
  */
-export function porduct(componentName:string , componentDir:string){
-    const dir = path.join(componentDir,componentName)
-    //创建目录
-    fs.mkdirSync(dir,{recursive:true})
- // index.tsx
-    fs.writeFile(path.join(dir,`index.tsx`), tsx(firstUpperCase(componentName)), writeFileErrorHandler);
- // index.less
-    fs.writeFile(path.join(dir,`index.less`), style(firstUpperCase(componentName)), writeFileErrorHandler);
+export function porduct(componentName:string , appPath:string){
+  componentName = firstUpperCase(componentName)
+  const componentDir = path.join(appPath , "src","components")
+  const dir = path.join(componentDir,componentName)
+  //创建目录
+  fs.mkdirSync(dir,{recursive:true})
+// index.tsx
+  fs.writeFile(path.join(dir,`index.tsx`), tsx(componentName), writeFileErrorHandler);
+// index.less
+  fs.writeFile(path.join(dir,`index.less`), style(componentName), writeFileErrorHandler);
 }
 
 
