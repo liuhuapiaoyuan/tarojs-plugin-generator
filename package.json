@@ -1,6 +1,6 @@
 {
   "name": "tarojs-plugin-generator",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Taro Generator 生成器",
   "main": "index.js",
   "scripts": {
