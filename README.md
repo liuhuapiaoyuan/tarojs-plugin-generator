@@ -1,20 +1,20 @@
-# @tarojs/plugin-mock
+# @tarojs/taro-plugin-generator
 
-> Taro 数据 Mock 插件
+> Taro 页面/组件创建工具
 
 ## 安装
 
 在 Taro 项目根目录下安装
 
 ```bash
-$ npm i @tarojs/plugin-mock --save
+$ npm i @tarojs/taro-plugin-generator --save
 ```
 
 ## 使用
 
 ### 引入插件
 
-请确保 Taro CLI 已升级至 Taro 2/3 的最新版本。
+请确保 Taro CLI 已升级至 Taro3 的最新版本。
 
 修改项目 `config/index.js` 中的 plugins 配置为如下
 
@@ -24,7 +24,7 @@ const config = {
   plugins: [
     ...其余插件
 
-    '@tarojs/plugin-mock'
+    '@tarojs/plugin-generator'
   ]
   ...
 }
