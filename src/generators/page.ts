@@ -10,10 +10,10 @@ import { firstUpperCase } from '../utils';
  * @param group 页面分组
  * @param name  页面名称
  */
-const tsx = (name)=>`import cx from 'classnames'
+const tsx = ({name,cssExt})=>`import cx from 'classnames'
 import React from 'react'
 import { View } from '@tarojs/components'
-import styles from './${name}.module.less'
+import styles from './${name}.module.${cssExt}'
 
 function ${firstUpperCase(name)}Page(){
   return <View className={cx(styles.${firstUpperCase(name)}Page,'page')}>
@@ -50,9 +50,10 @@ function writeFileErrorHandler(err) {
  * 
  * @param componentName 页面
  * @param componentDir   页面目录
+ * @param cssExt:文件后缀
  * @param log 日志工具
  */
-export function PageGenerator(pagePath:string , appPath:string , chalk:any){
+export function PageGenerator({cssExt,pagePath , appPath , chalk}:any){
   //判断页面情况
   const pages = pagePath.split('/')
   if(pages.length!==1 && pages.length!==2){
@@ -75,11 +76,11 @@ export function PageGenerator(pagePath:string , appPath:string , chalk:any){
   //创建目录
   fs.mkdirSync(dir,{recursive:true})
   // index.tsx
-  fs.writeFile(path.join(dir,`${pageName}.tsx`), tsx(pageName), writeFileErrorHandler);
+  fs.writeFile(path.join(dir,`${pageName}.tsx`), tsx({name:pageName,cssExt}), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.tsx`)) )
   // index.less
   fs.writeFile(path.join(dir,`${pageName}.less`), style(pageName), writeFileErrorHandler);
-  console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.less`) ) )
+  console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.${cssExt}`) ) )
   // 页面config
   fs.writeFile(path.join(dir,`${pageName}.config.ts`), config(), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.confit.ts`) ) )

@@ -1,5 +1,6 @@
 import {ComponentGenerator} from './generators/components'
 import {PageGenerator} from './generators/page'
+import { cssExt } from './utils'
 
  
 // taro gen --component=Empty  组件名称要大写
@@ -8,7 +9,10 @@ import {PageGenerator} from './generators/page'
 //创建哪个的页面组件  页面，页面路径，组件名称
 // taro gen --component=index/Empty
 // export default (ctx, pluginOpts) => {
-export default (ctx) => {
+export default (ctx,pluginOpts) => {
+  //查看插件配置
+  console.log('插件配置:',pluginOpts)
+  const {css='less'} = pluginOpts
   ctx.registerCommand({
     // 命令名
     name: 'gen', 
@@ -26,6 +30,7 @@ export default (ctx) => {
       'taro gen --page mime/balance            (生成=>pages/mime/balance)',
     ],
     async fn () {
+      const cssExtStr =  cssExt(css)
       const { chalk }     = ctx.helper
       let   { component,page } = ctx.runOpts.options
       const { appPath }   = ctx.paths
@@ -34,13 +39,13 @@ export default (ctx) => {
       }
 
       if(typeof component =='string'){
-        return ComponentGenerator(component , appPath , chalk)  
+        return ComponentGenerator({component , appPath ,cssExt:cssExtStr chalk})  
       }
 
       //如果是创建页面
       if(typeof page==="string"){
         try{
-          return PageGenerator(page , appPath , chalk)
+          return PageGenerator({page , appPath , chalk,cssExt:cssExtStr})
         }catch(e){
           console.log(chalk.red(e))
         }

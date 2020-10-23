@@ -9,10 +9,10 @@ import { firstUpperCase } from '../utils';
  
 
 
-const tsx = name=>`import React from 'react'
+const tsx = ({name,cssExt})=>`import React from 'react'
 import { View } from '@tarojs/components'
 import classnames from 'classnames'
-import './index.less'
+import './index.${cssExt}'
 
 export interface ${name}Props  {
   className?: string
@@ -32,10 +32,10 @@ export { ${name} }
 `
 
 //创建页面级的组件
-const pageComponent = name=>`import React from 'react'
+const pageComponent = ({name,cssExt})=>`import React from 'react'
 import { View } from '@tarojs/components'
 import classnames from 'classnames'
-import styles from './${name}.module.less'
+import styles from './${name}.module.${cssExt}'
 
 export interface ${name}Props  {
   className?: string
@@ -70,7 +70,7 @@ function writeFileErrorHandler(err) {
  * @param component 组件名称 可能是  index/Banner  也可能是Banner
  * @param componentDir   组件文件夹
  */
-export function ComponentGenerator(component:string , appPath:string , chalk:any){
+export function ComponentGenerator({component , appPath , chalk,cssExt}:any){
 
   let pageName
   let componentName
@@ -97,11 +97,11 @@ export function ComponentGenerator(component:string , appPath:string , chalk:any
   if(pageName){
     const componentDir = path.join(appPath , "src","pages",pageName,"components")
     fs.mkdirSync(componentDir,{recursive:true})
-    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), pageComponent(componentName), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), pageComponent({name:componentName,cssExt}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.tsx`)) )
-    // index.less
-    fs.writeFile(path.join(componentDir,`${componentName}.module.less`), style(componentName), writeFileErrorHandler);
-    console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.module.less`)) )
+    // index.${cssExt}
+    fs.writeFile(path.join(componentDir,`${componentName}.module.${cssExt}`), style(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.module.${cssExt}`)) )
 
     console.log(chalk.green(`页面组件【${pageName}/components/${componentName}】创建成功`) )
   }else{
@@ -109,11 +109,11 @@ export function ComponentGenerator(component:string , appPath:string , chalk:any
     const componentDir = path.join(appPath , "src","components",componentName) 
     fs.mkdirSync(componentDir,{recursive:true})
     // index.tsx
-    fs.writeFile(path.join(componentDir,`index.tsx`), tsx(componentName), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`index.tsx`), tsx({name:componentName,cssExt}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.tsx`)) )
-    // index.less
-    fs.writeFile(path.join(componentDir,`index.less`), style(componentName), writeFileErrorHandler);
-    console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.less`)) )
+    // index.${cssExt}
+    fs.writeFile(path.join(componentDir,`index.${cssExt}`), style(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.${cssExt}`)) )
     console.log(chalk.green(`项目组件【${componentName}】创建成功`) )
   }
 }
