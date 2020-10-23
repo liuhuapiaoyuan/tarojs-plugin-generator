@@ -1,4 +1,4 @@
-# @tarojs/taro-plugin-generator
+# taro-plugin-generator
 
 > Taro 页面/组件创建工具，全部使用函数式组件+typescropt+hooks，提供良好的页面提示。
 
@@ -9,7 +9,7 @@
 在 Taro 项目根目录下安装
 
 ```bash
-$ npm i @tarojs/taro-plugin-generator --save
+$ npm i taro-plugin-generator --save
 ```
 
 ## 使用
@@ -26,7 +26,7 @@ const config = {
   plugins: [
     ...其余插件
 
-    '@tarojs/plugin-generator'
+    'taro-plugin-generator'
   ]
   ...
 }
