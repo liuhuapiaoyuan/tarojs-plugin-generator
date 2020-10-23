@@ -65,7 +65,7 @@ generator插件支持以下参数
 | :-----| :---- |
 |``` 'page'```|  开启页面cssModule（包括页面组件也会自动module化），文件名为 ```page.module.css``` |
 |``` 'component'```|  开启组件cssModule，文件命名为 ```component.module.css``` |
-|``` 'page,componen'```|  同时开启上述功能 |
+|``` 'page,component'```|  同时开启上述功能 |
 
 
 
