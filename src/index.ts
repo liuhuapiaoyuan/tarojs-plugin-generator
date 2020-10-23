@@ -1,6 +1,6 @@
 import {ComponentGenerator} from './generators/components'
 import {PageGenerator} from './generators/page'
-import { cssExt, getCssModuleMode, traverseObjectNode } from './utils'
+import { cssExt, getCssModuleMode } from './utils'
 import * as path from 'path'
 import * as t from '@babel/types'
 // const traverse = require('@babel/traverse').default
@@ -72,7 +72,13 @@ function parseEntry (ctx, entryPath , newPagePath) {
   const parseResult = parseAst(ast , newPagePath)
   // 写入 entry config file
   const entryConfigPath = entryPath.replace(path.extname(entryPath), '.ts')
-  fs.writeFileSync(entryConfigPath, parseResult.code)
+  console.log("entryCode.code",entryCode)
+  fs.writeFileSync(entryConfigPath, 
+    parseResult.code
+      .replace(new RegExp(`"/pages/`, "gm"),`\r\n    "/pages/`)
+      .replace(`'@tarojs/taro';`,`'@tarojs/taro';\r\n`)
+  
+  )
   console.log(`${chalk.green(`入口配置文件已经更新 ${normalizePath(entryConfigPath.replace(sourcePath, ''))}`)}`)
 }
  
