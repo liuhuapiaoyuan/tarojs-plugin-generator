@@ -45,7 +45,7 @@ const config = {
 
     ['tarojs-plugin-generator',{
       css:'sass',  //可配置css编译器： 支持 none sass less stylus
-      module:'page',      //开启页面的CssModule化
+      cssModules:'page',      //开启页面的CssModule化
     }]
   ]
   ...
@@ -58,14 +58,15 @@ const config = {
 | 参数项 | 类型 | 是否可选 | 用途 | 默认值 |
 | :-----| :---- | :---- | :---- |:---- |
 | css | string | 是 | 指定css类型，可选择 ```none```,```sass```,```less```,```stylus``` | ```none```|
-| cssModule | string | 是 | 可选项```'page'```,```'component'```,```'page',''component'```  | ```'page``` |
+| cssModules | string | 是 | 可选项```'page'```,```'component'```,```'page',''component'```  | ```none``` |
 
-> #### cssModule参数说明
+> #### cssModules参数说明
 | 参数项 | 用途  |
 | :-----| :---- |
 |``` 'page'```|  开启页面cssModule（包括页面组件也会自动module化），文件名为 ```page.module.css``` |
 |``` 'component'```|  开启组件cssModule，文件命名为 ```component.module.css``` |
 |``` 'page,component'```|  同时开启上述功能 |
+|``` 'none'```|  不打开cssModule功能 |
 
 
 
