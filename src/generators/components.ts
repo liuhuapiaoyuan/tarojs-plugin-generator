@@ -12,6 +12,7 @@ import { firstUpperCase } from '../utils';
 const tsx = name=>`import React from 'react'
 import { View } from '@tarojs/components'
 import classnames from 'classnames'
+import './index.less'
 
 export interface ${name}Props  {
   className?: string
@@ -23,7 +24,30 @@ function ${name}(props:${name}Props){
   const {
 
   } = props
-  return <View>
+  return <View className="${name}">
+  ${name}-content
+  </View>
+}
+export { ${name} }
+`
+
+//创建页面级的组件
+const pageComponent = name=>`import React from 'react'
+import { View } from '@tarojs/components'
+import classnames from 'classnames'
+import styles from './${name}.module.less'
+
+export interface ${name}Props  {
+  className?: string
+  children?:React.ReactNode
+  style?:string|React.CSSProperties|undefined
+}
+
+function ${name}(props:${name}Props){
+  const {
+
+  } = props
+  return <View className={styles.${name}}>
   ${name}-content
   </View>
 }
@@ -43,19 +67,55 @@ function writeFileErrorHandler(err) {
 //生产
 /**
  * 
- * @param componentName 组件名称
+ * @param component 组件名称 可能是  index/Banner  也可能是Banner
  * @param componentDir   组件文件夹
  */
-export function porduct(componentName:string , appPath:string){
+export function ComponentGenerator(component:string , appPath:string , chalk:any){
+
+  let pageName
+  let componentName
+  const componentInfos =component.split("/")
+  if(componentInfos.length!==1 && componentInfos.length!==2){
+    throw "组件参数必须是 【组件名称】或者 【页面文件夹/组件名称】"
+  }   
+  if(componentInfos.length === 1){
+    componentName= componentInfos[0]
+  }
+  if(componentInfos.length === 2){
+    pageName= componentInfos[0]
+    componentName= componentInfos[1]
+    //检测页面是否存在
+    const pageDir = path.join(appPath , "src","pages",pageName)
+    if(!fs.existsSync(pageDir)){
+      return console.log(chalk.red(`页面目录【${pageDir}】不存在，无法创建页面组件！`))
+    }
+  }
+
+
   componentName = firstUpperCase(componentName)
-  const componentDir = path.join(appPath , "src","components")
-  const dir = path.join(componentDir,componentName)
   //创建目录
-  fs.mkdirSync(dir,{recursive:true})
-// index.tsx
-  fs.writeFile(path.join(dir,`index.tsx`), tsx(componentName), writeFileErrorHandler);
-// index.less
-  fs.writeFile(path.join(dir,`index.less`), style(componentName), writeFileErrorHandler);
+  if(pageName){
+    const componentDir = path.join(appPath , "src","pages",pageName,"components")
+    fs.mkdirSync(componentDir,{recursive:true})
+    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), pageComponent(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.tsx`)) )
+    // index.less
+    fs.writeFile(path.join(componentDir,`${componentName}.module.less`), style(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.module.less`)) )
+
+    console.log(chalk.green(`页面组件【${pageName}/components/${componentName}】创建成功`) )
+  }else{
+  //项目组件
+    const componentDir = path.join(appPath , "src","components",componentName) 
+    fs.mkdirSync(componentDir,{recursive:true})
+    // index.tsx
+    fs.writeFile(path.join(componentDir,`index.tsx`), tsx(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.tsx`)) )
+    // index.less
+    fs.writeFile(path.join(componentDir,`index.less`), style(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.less`)) )
+    console.log(chalk.green(`项目组件【${componentName}】创建成功`) )
+  }
 }
 
 

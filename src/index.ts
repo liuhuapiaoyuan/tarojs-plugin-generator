@@ -1,4 +1,4 @@
-import {porduct} from './generators/components'
+import {ComponentGenerator} from './generators/components'
 import {PageGenerator} from './generators/page'
 
  
@@ -34,12 +34,16 @@ export default (ctx) => {
       }
 
       if(typeof component =='string'){
-        return porduct(component , appPath)
+        return ComponentGenerator(component , appPath , chalk)  
       }
 
       //如果是创建页面
       if(typeof page==="string"){
-        return PageGenerator(component , appPath)
+        try{
+          return PageGenerator(page , appPath , chalk)
+        }catch(e){
+          console.log(chalk.red(e))
+        }
       }
 
     }
