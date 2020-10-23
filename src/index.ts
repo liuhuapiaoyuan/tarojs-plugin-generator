@@ -1,6 +1,6 @@
 import {ComponentGenerator} from './generators/components'
 import {PageGenerator} from './generators/page'
-import { cssExt } from './utils'
+import { cssExt, getCssModuleMode } from './utils'
 
  
 // taro gen --component=Empty  组件名称要大写
@@ -10,9 +10,8 @@ import { cssExt } from './utils'
 // taro gen --component=index/Empty
 // export default (ctx, pluginOpts) => {
 export default (ctx,pluginOpts) => {
-  //查看插件配置
-  console.log('插件配置:',pluginOpts)
-  const {css='less'} = pluginOpts
+  const {css='less' , cssModules='none'} = pluginOpts
+  const cssModuleMode = getCssModuleMode(cssModules)
   ctx.registerCommand({
     // 命令名
     name: 'gen', 
@@ -39,13 +38,13 @@ export default (ctx,pluginOpts) => {
       }
 
       if(typeof component =='string'){
-        return ComponentGenerator({component , appPath ,cssExt:cssExtStr chalk})  
+        return ComponentGenerator({cssModule:cssModuleMode.component,pageComponentCssModule:cssModuleMode.page,component , appPath ,cssExt:cssExtStr,chalk})  
       }
 
       //如果是创建页面
       if(typeof page==="string"){
         try{
-          return PageGenerator({page , appPath , chalk,cssExt:cssExtStr})
+          return PageGenerator({cssModule:cssModuleMode.page,pagePath:page , appPath , chalk,cssExt:cssExtStr})
         }catch(e){
           console.log(chalk.red(e))
         }

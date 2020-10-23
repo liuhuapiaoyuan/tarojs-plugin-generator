@@ -3,16 +3,16 @@
  */
 import * as fs from 'fs'
 import * as path from 'path'
-import { firstUpperCase } from '../utils';
+import { firstUpperCase, getCssModuleClassName, getCssModuleExt } from '../utils';
 
 
  
 
 
-const tsx = ({name,cssExt})=>`import React from 'react'
+const tsx = ({name,cssExt,cssModule})=>`import React from 'react'
 import { View } from '@tarojs/components'
 import classnames from 'classnames'
-import './index.${cssExt}'
+import${cssModule?' styles from':''} './index${getCssModuleExt(cssModule)}.${cssExt}'
 
 export interface ${name}Props  {
   className?: string
@@ -24,30 +24,7 @@ function ${name}(props:${name}Props){
   const {
 
   } = props
-  return <View className="${name}">
-  ${name}-content
-  </View>
-}
-export { ${name} }
-`
-
-//创建页面级的组件
-const pageComponent = ({name,cssExt})=>`import React from 'react'
-import { View } from '@tarojs/components'
-import classnames from 'classnames'
-import styles from './${name}.module.${cssExt}'
-
-export interface ${name}Props  {
-  className?: string
-  children?:React.ReactNode
-  style?:string|React.CSSProperties|undefined
-}
-
-function ${name}(props:${name}Props){
-  const {
-
-  } = props
-  return <View className={styles.${name}}>
+  return <View className=${getCssModuleClassName(name,cssModule)}>
   ${name}-content
   </View>
 }
@@ -61,8 +38,8 @@ const style = name=>
 `
 
 function writeFileErrorHandler(err) {
-    if (err) throw err;
-  }
+  if (err) throw err;
+}
 
 //生产
 /**
@@ -70,7 +47,7 @@ function writeFileErrorHandler(err) {
  * @param component 组件名称 可能是  index/Banner  也可能是Banner
  * @param componentDir   组件文件夹
  */
-export function ComponentGenerator({component , appPath , chalk,cssExt}:any){
+export function ComponentGenerator({cssModule,pageComponentCssModule,component , appPath , chalk,cssExt}:any){
 
   let pageName
   let componentName
@@ -97,11 +74,11 @@ export function ComponentGenerator({component , appPath , chalk,cssExt}:any){
   if(pageName){
     const componentDir = path.join(appPath , "src","pages",pageName,"components")
     fs.mkdirSync(componentDir,{recursive:true})
-    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), pageComponent({name:componentName,cssExt}), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), tsx({name:componentName,cssExt,cssModule:pageComponentCssModule}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.tsx`)) )
     // index.${cssExt}
-    fs.writeFile(path.join(componentDir,`${componentName}.module.${cssExt}`), style(componentName), writeFileErrorHandler);
-    console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.module.${cssExt}`)) )
+    fs.writeFile(path.join(componentDir,`${componentName}${getCssModuleExt(pageComponentCssModule)}.${cssExt}`), style(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}${getCssModuleExt(pageComponentCssModule)}.${cssExt}`)) )
 
     console.log(chalk.green(`页面组件【${pageName}/components/${componentName}】创建成功`) )
   }else{
@@ -109,11 +86,11 @@ export function ComponentGenerator({component , appPath , chalk,cssExt}:any){
     const componentDir = path.join(appPath , "src","components",componentName) 
     fs.mkdirSync(componentDir,{recursive:true})
     // index.tsx
-    fs.writeFile(path.join(componentDir,`index.tsx`), tsx({name:componentName,cssExt}), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`index.tsx`), tsx({name:componentName,cssExt,cssModule}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.tsx`)) )
     // index.${cssExt}
-    fs.writeFile(path.join(componentDir,`index.${cssExt}`), style(componentName), writeFileErrorHandler);
-    console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.${cssExt}`)) )
+    fs.writeFile(path.join(componentDir,`index${getCssModuleExt(cssModule)}.${cssExt}`), style(componentName), writeFileErrorHandler);
+    console.log(chalk.green("创建成功=>"+path.join(componentDir,`index${getCssModuleExt(cssModule)}.${cssExt}`)) )
     console.log(chalk.green(`项目组件【${componentName}】创建成功`) )
   }
 }

@@ -14,3 +14,28 @@ const cssExts = {
 export function cssExt(css){
     return cssExts[css]
 }
+
+//计算开启模式
+export function getCssModuleMode(cssModuleConfig){
+  if(cssModuleConfig==="page"){
+    return {page:true,component:false}
+  }
+  if(cssModuleConfig==="page,component"){
+    return {page:true,component:true}
+  }
+  if(cssModuleConfig==="component"){
+    return {page:false,component:true}
+  }
+  return {page:false,component:false}
+}
+
+/**
+ * 补充一下后缀，生成　.module
+ * */
+export function getCssModuleExt(cssModuleOpened){
+  return cssModuleOpened?'.module':''
+}
+
+export function getCssModuleClassName(className,cssModuleOpened){
+  return cssModuleOpened ? `{styles.${className}}`:`"${className}"`
+}

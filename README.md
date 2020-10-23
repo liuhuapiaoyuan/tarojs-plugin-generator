@@ -58,7 +58,7 @@ const config = {
 | 参数项 | 类型 | 是否可选 | 用途 | 默认值 |
 | :-----| :---- | :---- | :---- |:---- |
 | css | string | 是 | 指定css类型，可选择 ```none```,```sass```,```less```,```stylus``` | ```none```|
-| cssModules | string | 是 | 可选项```'page'```,```'component'```,```'page',''component'```  | ```none``` |
+| cssModules | string | 是 | 可选项```'page'```,```'component'```,```'page,component'```,```none```  | ```none``` |
 
 > #### cssModules参数说明
 | 参数项 | 用途  |

@@ -3,20 +3,21 @@
  */
 import * as fs from 'fs'
 import * as path from 'path'
-import { firstUpperCase } from '../utils';
+import { firstUpperCase, getCssModuleExt } from '../utils';
 
 /**
  * 
  * @param group 页面分组
  * @param name  页面名称
  */
-const tsx = ({name,cssExt})=>`import cx from 'classnames'
-import React from 'react'
+const tsx = ({name,cssExt,cssModule})=>`import React from 'react'
+${cssModule ?　`import cx from 'classnames'` : '' }
 import { View } from '@tarojs/components'
-import styles from './${name}.module.${cssExt}'
+import${cssModule?' styles from':''} './${name}${getCssModuleExt(cssModule)}.${cssExt}'
+
 
 function ${firstUpperCase(name)}Page(){
-  return <View className={cx(styles.${firstUpperCase(name)}Page,'page')}>
+  return <View className=${ cssModule ? `{cx(styles.${firstUpperCase(name)}Page,'page')}` : `'${firstUpperCase(name)}Page page'` }>
     ${firstUpperCase(name)}Page
   </View>
 }
@@ -53,7 +54,7 @@ function writeFileErrorHandler(err) {
  * @param cssExt:文件后缀
  * @param log 日志工具
  */
-export function PageGenerator({cssExt,pagePath , appPath , chalk}:any){
+export function PageGenerator({cssExt,pagePath , appPath , chalk,cssModule}:any){
   //判断页面情况
   const pages = pagePath.split('/')
   if(pages.length!==1 && pages.length!==2){
@@ -76,14 +77,14 @@ export function PageGenerator({cssExt,pagePath , appPath , chalk}:any){
   //创建目录
   fs.mkdirSync(dir,{recursive:true})
   // index.tsx
-  fs.writeFile(path.join(dir,`${pageName}.tsx`), tsx({name:pageName,cssExt}), writeFileErrorHandler);
+  fs.writeFile(path.join(dir,`${pageName}.tsx`), tsx({name:pageName,cssExt,cssModule}), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.tsx`)) )
   // index.less
-  fs.writeFile(path.join(dir,`${pageName}.less`), style(pageName), writeFileErrorHandler);
-  console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.${cssExt}`) ) )
+  fs.writeFile(path.join(dir,`${pageName}${getCssModuleExt(cssModule)}.${cssExt}`), style(pageName), writeFileErrorHandler);
+  console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}${getCssModuleExt(cssModule)}.${cssExt}`) ) )
   // 页面config
   fs.writeFile(path.join(dir,`${pageName}.config.ts`), config(), writeFileErrorHandler);
-  console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.confit.ts`) ) )
+  console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.config.ts`) ) )
 }
 
 
