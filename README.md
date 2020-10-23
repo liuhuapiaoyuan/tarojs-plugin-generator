@@ -58,16 +58,18 @@ generator插件支持以下参数
 | 参数项 | 类型 | 是否可选 | 用途 | 默认值 |
 | :-----| :---- | :---- | :---- |:---- |
 | css | string | 是 | 指定css类型，可选择 ```none```,```sass```,```less```,```stylus``` | ```none```|
-| module | string | 是 | 
-  ``` 'page'  开启页面cssModule（包括页面组件也会自动module化），文件命名为 page.module.css```  ,
-  ``` 'component'  开启组件cssModule，文件命名为 component.module.css```  
-  ``` 'page,component'  同时开启上述功能```  
-| ```'page'``` |
+| module | string | 是 | 可选项```'page'```,```'component'```,```'page',''component'```  | ```'page``` |
+
+### module参数说明
+| 参数项 | 用途  |
+| :-----| :---- |
+|``` 'page'```|  开启页面cssModule（包括页面组件也会自动module化），文件名为 ```page.module.css``` |
+|``` 'component'```|  开启组件cssModule，文件命名为 ```component.module.css``` |
+|``` 'page,componen'```|  同时开启上述功能 |
 
 
 
-
-这样可通过 `taro gen  参数` 来自动化创建页面
+>这样可通过 `taro gen  参数` 来自动化创建页面
 
 ### 命令行参数
 
