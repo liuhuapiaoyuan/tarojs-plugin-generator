@@ -44,7 +44,8 @@ const config = {
     ...其余插件
 
     ['tarojs-plugin-generator',{
-      css:'sass'
+      css:'sass',  //可配置css编译器： 支持 none sass less stylus
+      module:'page',      //开启页面的CssModule化
     }]
   ]
   ...
