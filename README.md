@@ -53,14 +53,14 @@ const config = {
 ```
 
 ### 插件配置
-generator插件支持以下参数
+> #### generator插件支持以下参数
 
 | 参数项 | 类型 | 是否可选 | 用途 | 默认值 |
 | :-----| :---- | :---- | :---- |:---- |
 | css | string | 是 | 指定css类型，可选择 ```none```,```sass```,```less```,```stylus``` | ```none```|
-| module | string | 是 | 可选项```'page'```,```'component'```,```'page',''component'```  | ```'page``` |
+| cssModule | string | 是 | 可选项```'page'```,```'component'```,```'page',''component'```  | ```'page``` |
 
-### module参数说明
+> #### cssModule参数说明
 | 参数项 | 用途  |
 | :-----| :---- |
 |``` 'page'```|  开启页面cssModule（包括页面组件也会自动module化），文件名为 ```page.module.css``` |
