@@ -1,6 +1,8 @@
 # @tarojs/taro-plugin-generator
 
-> Taro 页面/组件创建工具
+> Taro 页面/组件创建工具，全部使用函数式组件+typescropt+hooks，提供良好的页面提示。
+
+
 
 ## 安装
 
@@ -32,70 +34,70 @@ const config = {
 
 这样在 `taro build` 编译完后就会启动一个数据 mock 服务器。
 
-### 参数
+### 命令行参数
 
-Mock 插件可以接受如下参数：
+generator插件支持以下参数
 
 | 参数项 | 类型 | 是否可选 | 用途 |
 | :-----| :---- | :---- | :---- |
-| host | string | 是 | 设置数据 mock 服务地址，默认为 127.0.0.1 |
-| port | number | 是 | 设置数据 mock 服务端口，默认为 9527 |
-| mocks | object | 是 | 设置数据 mock 接口 |
+| --component | string | 是 | 创建一个组件/页面级组件 |
+| --page | string | 是 | 创建一个页面 |
 
-其中 `mocks` 参数是用于设置数据 mock 接口，以 k-v 的方式进行设置，接口的 HTTP 方法通过在 key 中进行指定，例如：
 
-```
-{
-  'GET /api/user/1': {
-    name: luckyadam
-  },
+#### 使用案例
 
-  'POST /api/upload': {
-    file: xxxx
-  }
-}
-```
-
-支持的 HTTP 方法有：`['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']`
-
-如果项目中的接口过多，也可以不通过插件的 `mocks` 配置来设置接口，可以直接在项目中创建一个 `mock` 目录，在 `mock` 下添加接口配置文件来设置接口，接口配置文件支持使用 ES6 语法以及 TS，例如。
-
-如上配置可以改写成，在项目根目录下创建 `mock` 目录，添加一个 `api.ts` 文件，内容如下：
-
-```typescript
-// mock/api.ts
-
-export default {
-  'GET /api/user/1': {
-    name: luckyadam
-  },
-
-  'POST /api/upload': {
-    file: xxxx
-  }
-}
-```
-
-同时也支持使用 [`mockjs`](http://mockjs.com/) 来生成 mock 数据
-
-安装 `mockjs`
-
+##### 1.创建项目组件
 ```bash
-$ npm i mockjs --save
+ taro gen --component Button
+```
+生成结果：
+```
+-- 组件:      components/Button/index.tsx
+-- 组件样式:  components/Button/index.less
 ```
 
-使用如下
 
-```ts
-// /mock/api.ts
-import mockjs from 'mockjs'
 
-export default {
-  'GET /api/tags': mockjs.mock({
-    'list|1-10': [{
-      // 属性 id 是一个自增数，起始值为 1，每次增 1
-      'id|+1': 1
-    }]
-  })
-}
+##### 2.创建页面组件
+```bash
+ taro gen --component index/Button  // index为页面文件夹名称，自动查询为 pages/index
 ```
+
+生成结果：
+```
+-- 组件:      pages/index/components/Button/index.tsx
+-- 组件样式:  pages/index/components/Button/index.less
+```
+
+
+
+##### 3.创建页面(简化版)
+```bash
+ taro gen --page mime 
+```
+
+生成结果：
+```
+-- 页面:          pages/mime/mime.tsx
+-- 页面配置:       pages/mime/mime.config.tsx
+-- 页面样式:      pages/mime/mime.less
+```
+
+
+
+##### 4.创建页面(指定具体页面名称)
+```bash
+ taro gen --page index/search 
+```
+
+生成结果：
+```
+-- 页面:          pages/index/search.tsx
+-- 页面配置:       pages/index/search.config.tsx
+-- 页面样式:      pages/index/search.less
+```
+
+```其中注意，页面组件命名自动为页面首字母大写，如上则生成页面为：SearchPage
+```
+
+
