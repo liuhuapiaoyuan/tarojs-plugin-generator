@@ -1,3 +1,6 @@
+// const t = require('@babel/types')
+import  * as t from '@babel/types'
+
 /** 首字母大写 */
 export function firstUpperCase(str:string){
     return str.replace(/\b(\w)(\w*)/g, function(_$0, $1, $2) {
@@ -39,4 +42,48 @@ export function getCssModuleExt(cssModuleOpened){
 
 export function getCssModuleClassName(className,cssModuleOpened){
   return cssModuleOpened ? `{styles.${className}}`:`"${className}"`
+}
+
+
+
+//自动更新 app.confit.ts
+export function traverseObjectNode (node , newpagePath:string) {
+  console.log('node.type',node.type)
+  if (node.type === 'ClassProperty' || node.type === 'ObjectProperty') {
+    const properties = node.value.properties
+    const obj = {}
+    properties.forEach(p => {
+      let key = t.isIdentifier(p.key) ? p.key.name : p.key.value
+      obj[key] = traverseObjectNode(p.value,newpagePath)
+    })
+    return obj
+  }
+  if (node.type === 'ObjectExpression') {
+    const properties = node.properties
+    const obj= {}
+    properties.forEach(p => {
+      let key = t.isIdentifier(p.key) ? p.key.name : p.key.value
+      obj[key] = traverseObjectNode(p.value,newpagePath)
+    })
+    return obj
+  }
+  if (node.type === 'ArrayExpression') { 
+    const newpage = t.stringLiteral(newpagePath)
+    return [newpage].concat(node.elements).map(item => traverseObjectNode(item,newpagePath))
+  }
+  if (node.type === 'NullLiteral') {
+    return null
+  }
+  if(node.type ==="VariableDeclaration"){
+    return node.declarations.map(item => traverseObjectNode(item,newpagePath))
+  }
+  if(node.type ==="VariableDeclarator"){
+    if(node.id.name ==="config"){
+      return traverseObjectNode(node.init,newpagePath)
+    }
+    // console.log(node)
+    // return node.declarations.map(item => traverseObjectNode(item),newpagePath)
+  }
+
+  return node.value
 }

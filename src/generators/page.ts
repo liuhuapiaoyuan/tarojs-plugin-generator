@@ -85,6 +85,9 @@ export function PageGenerator({cssExt,pagePath , appPath , chalk,cssModule}:any)
   // 页面config
   fs.writeFile(path.join(dir,`${pageName}.config.ts`), config(), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.config.ts`) ) )
+
+  //返回页面名称
+  return `/pages/${pageGroup}/${pageName}`
 }
 
 

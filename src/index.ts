@@ -1,8 +1,11 @@
 import {ComponentGenerator} from './generators/components'
 import {PageGenerator} from './generators/page'
-import { cssExt, getCssModuleMode } from './utils'
-
- 
+import { cssExt, getCssModuleMode, traverseObjectNode } from './utils'
+import * as path from 'path'
+import * as t from '@babel/types'
+// const traverse = require('@babel/traverse').default
+import traverse from '@babel/traverse' 
+import generator from '@babel/generator'
 // taro gen --component=Empty  组件名称要大写
 //创建页面
 // taro gen --page=/pages/index/components/Empty
@@ -30,9 +33,13 @@ export default (ctx,pluginOpts) => {
     ],
     async fn () {
       const cssExtStr =  cssExt(css)
-      const { chalk }     = ctx.helper
+      const {  fs, chalk, resolveScriptPath }     = ctx.helper
       let   { component,page } = ctx.runOpts.options
-      const { appPath }   = ctx.paths
+      const { appPath,sourcePath }   = ctx.paths
+
+  
+
+
       if (typeof component !== 'string' && typeof page !== 'string') {
         return console.log(chalk.red('请输入需要创建的组件/页面名称！！'))
       }
@@ -44,7 +51,9 @@ export default (ctx,pluginOpts) => {
       //如果是创建页面
       if(typeof page==="string"){
         try{
-          return PageGenerator({cssModule:cssModuleMode.page,pagePath:page , appPath , chalk,cssExt:cssExtStr})
+          const pagePath = PageGenerator({cssModule:cssModuleMode.page,pagePath:page , appPath , chalk,cssExt:cssExtStr})
+          const entryPath = resolveScriptPath(path.join(sourcePath, 'app.config.ts'))
+          parseEntry(ctx, entryPath,pagePath )
         }catch(e){
           console.log(chalk.red(e))
         }
@@ -52,4 +61,68 @@ export default (ctx,pluginOpts) => {
 
     }
   })
+}
+
+
+function parseEntry (ctx, entryPath , newPagePath) {
+  const { fs, chalk, normalizePath } = ctx.helper
+  const { sourcePath } = ctx.paths
+  const entryCode = fs.readFileSync(entryPath).toString()
+  const ast = createAst(entryCode)
+  const parseResult = parseAst(ast , newPagePath)
+  // 写入 entry config file
+  const entryConfigPath = entryPath.replace(path.extname(entryPath), '.ts')
+  fs.writeFileSync(entryConfigPath, parseResult.code)
+  console.log(`${chalk.green(`入口配置文件已经更新 ${normalizePath(entryConfigPath.replace(sourcePath, ''))}`)}`)
+}
+ 
+
+function createAst (code) {
+  const parser = require('@babel/parser')
+  return parser.parse(code, {
+    sourceType: 'module',
+    plugins: [
+      'typescript',
+      'asyncGenerators',
+      'bigInt',
+      'classProperties',
+      'classPrivateProperties',
+      'classPrivateMethods',
+      'decorators-legacy',
+      'doExpressions',
+      'dynamicImport',
+      'exportDefaultFrom',
+      'exportNamespaceFrom',
+      'functionBind',
+      'functionSent',
+      'importMeta',
+      'logicalAssignment',
+      'nullishCoalescingOperator',
+      'numericSeparator',
+      'objectRestSpread',
+      'optionalCatchBinding',
+      'optionalChaining',
+      'partialApplication',
+      'throwExpressions',
+      'topLevelAwait'
+    ]
+  })
+}
+
+function parseAst (ast,newPagePath) { 
+  traverse(ast, {
+    ArrayExpression(astPath){
+      if(astPath.parent.key.name ==="pages"){
+        const newpageNode = t.stringLiteral(newPagePath)
+        const elements = astPath.node.elements
+        astPath.node.elements  =  elements.filter(item=>{
+          if(!item) return true 
+          if(item.value!=newPagePath) return true
+        })
+        astPath.node.elements.unshift(newpageNode)
+      }
+    } 
+  })
+  return generator(ast,{})
+  
 }
