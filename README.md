@@ -55,7 +55,7 @@ const config = {
 generator插件支持以下参数
 
 | 参数项 | 类型 | 是否可选 | 用途 | 默认值 |
-| :-----| :---- | :---- | :---- |
+| :-----| :---- | :---- | :---- |:---- |
 | css | string | 是 | 指定css类型，可选择 ```none```,```sass```,```less```,```stylus``` | ```none```|
 | module | string | 是 | 
   ``` 'page'  开启页面cssModule（包括页面组件也会自动module化），文件命名为 page.module.css```  ,
