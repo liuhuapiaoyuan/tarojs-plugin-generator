@@ -9,10 +9,10 @@ import { firstUpperCase, getCssModuleClassName, getCssModuleExt } from '../utils
  
 
 
-const tsx = ({name,cssExt,cssModule})=>`import React from 'react'
+const tsx = ({name,cssExt,cssName,cssModule})=>`import React from 'react'
 import { View } from '@tarojs/components'
 import classnames from 'classnames'
-import${cssModule?' styles from':''} './index${getCssModuleExt(cssModule)}.${cssExt}'
+import${cssModule?' styles from':''} './${cssName}${getCssModuleExt(cssModule)}.${cssExt}'
 
 export interface ${name}Props  {
   className?: string
@@ -74,7 +74,7 @@ export function ComponentGenerator({cssModule,pageComponentCssModule,component ,
   if(pageName){
     const componentDir = path.join(appPath , "src","pages",pageName,"components")
     fs.mkdirSync(componentDir,{recursive:true})
-    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), tsx({name:componentName,cssExt,cssModule:pageComponentCssModule}), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), tsx({name:componentName,cssName:'componentName',cssExt,cssModule:pageComponentCssModule}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.tsx`)) )
     // index.${cssExt}
     fs.writeFile(path.join(componentDir,`${componentName}${getCssModuleExt(pageComponentCssModule)}.${cssExt}`), style(componentName), writeFileErrorHandler);
@@ -86,7 +86,7 @@ export function ComponentGenerator({cssModule,pageComponentCssModule,component ,
     const componentDir = path.join(appPath , "src","components",componentName) 
     fs.mkdirSync(componentDir,{recursive:true})
     // index.tsx
-    fs.writeFile(path.join(componentDir,`index.tsx`), tsx({name:componentName,cssExt,cssModule}), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`index.tsx`), tsx({name:componentName,cssExt,cssModule,cssName:"index"}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`index.tsx`)) )
     // index.${cssExt}
     fs.writeFile(path.join(componentDir,`index${getCssModuleExt(cssModule)}.${cssExt}`), style(componentName), writeFileErrorHandler);
