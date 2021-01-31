@@ -74,7 +74,7 @@ export function ComponentGenerator({cssModule,pageComponentCssModule,component ,
   if(pageName){
     const componentDir = path.join(appPath , "src","pages",pageName,"components")
     fs.mkdirSync(componentDir,{recursive:true})
-    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), tsx({name:componentName,cssName:'componentName',cssExt,cssModule:pageComponentCssModule}), writeFileErrorHandler);
+    fs.writeFile(path.join(componentDir,`${componentName}.tsx`), tsx({name:componentName,cssName:componentName,cssExt,cssModule:pageComponentCssModule}), writeFileErrorHandler);
     console.log(chalk.green("创建成功=>"+path.join(componentDir,`${componentName}.tsx`)) )
     // index.${cssExt}
     fs.writeFile(path.join(componentDir,`${componentName}${getCssModuleExt(pageComponentCssModule)}.${cssExt}`), style(componentName), writeFileErrorHandler);
