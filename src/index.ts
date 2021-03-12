@@ -119,12 +119,18 @@ function parseAst (ast,newPagePath) {
   traverse(ast, {
     ArrayExpression(astPath){
       if(astPath.parent.key.name ==="pages"){
+        //新节点，修复/开头
+        if(newPagePath.startsWith("/")){
+          newPagePath = newPagePath.substring(1)
+        }
+        
         const newpageNode = t.stringLiteral(newPagePath)
         const elements = astPath.node.elements
         astPath.node.elements  =  elements.filter(item=>{
           if(!item) return true 
           if(item.value!=newPagePath) return true
         })
+        //加入新的节点
         astPath.node.elements.unshift(newpageNode)
       }
     } 
