@@ -79,7 +79,7 @@ function parseEntry (ctx, entryPath , newPagePath) {
       .replace(`'@tarojs/taro';`,`'@tarojs/taro';\r\n`)
   
   )
-  console.log(`${chalk.green(`入口配置文件已经更新 ${normalizePath(entryConfigPath.replace(sourcePath, ''))}`)}`)
+  console.log(`${chalk.green(`入口配置文件已经更新，已插入:${newPagePath}`)
 }
  
 
@@ -123,14 +123,13 @@ function parseAst (ast,newPagePath) {
         if(newPagePath.startsWith("/")){
           newPagePath = newPagePath.substring(1)
         }
-        
         const newpageNode = t.stringLiteral(newPagePath)
         const elements = astPath.node.elements
         astPath.node.elements  =  elements.filter(item=>{
           if(!item) return true 
           if(item.value!=newPagePath) return true
         })
-        //加入新的节点
+        //新节点直接插入到头部
         astPath.node.elements.unshift(newpageNode)
       }
     } 

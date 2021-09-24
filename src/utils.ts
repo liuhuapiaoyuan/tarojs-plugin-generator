@@ -48,7 +48,6 @@ export function getCssModuleClassName(className,cssModuleOpened){
 
 //自动更新 app.confit.ts
 export function traverseObjectNode (node , newpagePath:string) {
-  console.log('node.type',node.type)
   if (node.type === 'ClassProperty' || node.type === 'ObjectProperty') {
     const properties = node.value.properties
     const obj = {}
@@ -81,8 +80,6 @@ export function traverseObjectNode (node , newpagePath:string) {
     if(node.id.name ==="config"){
       return traverseObjectNode(node.init,newpagePath)
     }
-    // console.log(node)
-    // return node.declarations.map(item => traverseObjectNode(item),newpagePath)
   }
 
   return node.value
