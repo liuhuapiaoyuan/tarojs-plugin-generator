@@ -68,20 +68,26 @@ function parseEntry (ctx, entryPath , newPagePath) {
   const { fs, chalk, normalizePath } = ctx.helper
   const { sourcePath } = ctx.paths
   const entryCode = fs.readFileSync(entryPath).toString()
-  const ast = createAst(entryCode)
-  const parseResult = parseAst(ast , newPagePath)
-  // 写入 entry config file
+  const parseResult = injectPageToEntry(entryCode,newPagePath);
   const entryConfigPath = entryPath.replace(path.extname(entryPath), '.ts')
-  console.log("entryCode.code",entryCode)
   fs.writeFileSync(entryConfigPath, 
     parseResult.code
       .replace(new RegExp(`"/pages/`, "gm"),`\r\n    "/pages/`)
       .replace(`'@tarojs/taro';`,`'@tarojs/taro';\r\n`)
   
   )
-  console.log(`${chalk.green(`入口配置文件已经更新，已插入:${newPagePath}`)
+  console.log(chalk.green(`入口配置文件已经更新，已插入:${newPagePath}`))
 }
- 
+
+/**
+ * 插入新的页面到入口
+ * @param entryConfigCode 
+ */
+export function injectPageToEntry(entryConfigCode:string , newPagePath:string){
+  const ast = createAst(entryConfigCode)
+  const parseResult = parseAst(ast , newPagePath)
+  return parseResult;
+}
 
 function createAst (code) {
   const parser = require('@babel/parser')
