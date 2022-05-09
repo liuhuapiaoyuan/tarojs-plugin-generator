@@ -59,6 +59,7 @@ const config = {
 | :-----| :---- | :---- | :---- |:---- |
 | css | string | 是 | 指定css类型，可选择 ```none```,```sass```,```less```,```stylus``` | ```none```|
 | cssModules | string | 是 | 可选项```'page'```,```'component'```,```'page,component'```,```none```  | ```none``` |
+| nocss | boolean | 是 | 可选项，为true则生成page时不生成*.less文件 | ```false``` |
 
 > #### cssModules参数说明
 | 参数项 | 用途  |
