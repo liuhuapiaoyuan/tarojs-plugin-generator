@@ -13,7 +13,7 @@ import generator from '@babel/generator'
 // taro gen --component=index/Empty
 // export default (ctx, pluginOpts) => {
 export default (ctx,pluginOpts) => {
-  const {css='less' , cssModules='none'} = pluginOpts
+  const {css='less' , cssModules='none', nocss= false} = pluginOpts
   const cssModuleMode = getCssModuleMode(cssModules)
   ctx.registerCommand({
     // 命令名
@@ -51,7 +51,7 @@ export default (ctx,pluginOpts) => {
       //如果是创建页面
       if(typeof page==="string"){
         try{
-          const pagePath = PageGenerator({cssModule:cssModuleMode.page,pagePath:page , appPath , chalk,cssExt:cssExtStr})
+          const pagePath = PageGenerator({cssModule:cssModuleMode.page,pagePath:page , appPath , chalk,cssExt:cssExtStr, nocss})
           const entryPath = resolveScriptPath(path.join(sourcePath, 'app.config.ts'))
           parseEntry(ctx, entryPath,pagePath )
         }catch(e){
