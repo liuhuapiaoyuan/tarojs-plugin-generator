@@ -54,7 +54,7 @@ function writeFileErrorHandler(err) {
  * @param cssExt:文件后缀
  * @param log 日志工具
  */
-export function PageGenerator({cssExt,pagePath , appPath , chalk,cssModule}:any){
+export function PageGenerator({cssExt,pagePath , appPath , chalk,cssModule,nocss}:any){
   //判断页面情况
   const pages = pagePath.split('/')
   if(pages.length!==1 && pages.length!==2){
@@ -80,8 +80,10 @@ export function PageGenerator({cssExt,pagePath , appPath , chalk,cssModule}:any)
   fs.writeFile(path.join(dir,`${pageName}.tsx`), tsx({name:pageName,cssExt,cssModule}), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.tsx`)) )
   // index.less
+  if(!nocss) { 
   fs.writeFile(path.join(dir,`${pageName}${getCssModuleExt(cssModule)}.${cssExt}`), style(pageName), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}${getCssModuleExt(cssModule)}.${cssExt}`) ) )
+ }
   // 页面config
   fs.writeFile(path.join(dir,`${pageName}.config.ts`), config(), writeFileErrorHandler);
   console.log(chalk.green("创建成功=>"+path.join(dir,`${pageName}.config.ts`) ) )
